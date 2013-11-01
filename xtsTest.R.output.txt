@@ -1,0 +1,72 @@
+> options(width=250)
+> 
+> # TODO: Fails with EST
+> #TZ <- "EST"
+> # TODO: Works with UTC
+> TZ <- "UTC"
+> 
+> Sys.setenv(TZ=TZ)
+> 
+> require(blotter)
+> 
+> symbol <- "SPY"
+> 
+> SPY <- getSymbols(symbol, from="1990-01-01", auto.assign=FALSE)
+> SPY.test <- adjustOHLC(SPY)
+> 
+> head(SPY.test)
+           SPY.Open SPY.High  SPY.Low SPY.Close SPY.Volume SPY.Adjusted
+1993-01-29 29.96399 29.96399 29.81407  29.94355    1003200        29.94
+1993-02-01 29.96399 30.15480 29.96399  30.15480     480500        30.15
+1993-02-02 30.13436 30.24339 30.07303  30.21614     201300        30.22
+1993-02-03 30.26384 30.55687 30.24339  30.53642     529400        30.54
+1993-02-04 30.64546 30.72723 30.30473  30.66590     531500        30.67
+1993-02-05 30.64546 30.70679 30.47509  30.64546     492100        30.65
+> 
+> SPY.test$duplication <- .xts((-1)*coredata(SPY.test)[, 1], index(SPY.test), tzone=TZ)
+> 
+> # ERROR: Duplicated rows with TZ <- "EST" but all is fine with TZ <- "UTC"... Why!!!???
+> head(SPY.test)
+           SPY.Open SPY.High  SPY.Low SPY.Close SPY.Volume SPY.Adjusted duplication
+1993-01-29 29.96399 29.96399 29.81407  29.94355    1003200        29.94   -29.96399
+1993-02-01 29.96399 30.15480 29.96399  30.15480     480500        30.15   -29.96399
+1993-02-02 30.13436 30.24339 30.07303  30.21614     201300        30.22   -30.13436
+1993-02-03 30.26384 30.55687 30.24339  30.53642     529400        30.54   -30.26384
+1993-02-04 30.64546 30.72723 30.30473  30.66590     531500        30.67   -30.64546
+1993-02-05 30.64546 30.70679 30.47509  30.64546     492100        30.65   -30.64546
+> options(width=250)
+> 
+> # TODO: Fails with EST
+> TZ <- "EST"
+> # TODO: Works with UTC
+> #TZ <- "UTC"
+> 
+> Sys.setenv(TZ=TZ)
+> 
+> require(blotter)
+> 
+> symbol <- "SPY"
+> 
+> SPY <- getSymbols(symbol, from="1990-01-01", auto.assign=FALSE)
+> SPY.test <- adjustOHLC(SPY)
+> 
+> head(SPY.test)
+           SPY.Open SPY.High  SPY.Low SPY.Close SPY.Volume SPY.Adjusted
+1993-01-29 29.96399 29.96399 29.81407  29.94355    1003200        29.94
+1993-02-01 29.96399 30.15480 29.96399  30.15480     480500        30.15
+1993-02-02 30.13436 30.24339 30.07303  30.21614     201300        30.22
+1993-02-03 30.26384 30.55687 30.24339  30.53642     529400        30.54
+1993-02-04 30.64546 30.72723 30.30473  30.66590     531500        30.67
+1993-02-05 30.64546 30.70679 30.47509  30.64546     492100        30.65
+> 
+> SPY.test$duplication <- .xts((-1)*coredata(SPY.test)[, 1], index(SPY.test), tzone=TZ)
+> 
+> # ERROR: Duplicated rows with TZ <- "EST" but all is fine with TZ <- "UTC"... Why!!!???
+> head(SPY.test)
+           SPY.Open SPY.High  SPY.Low SPY.Close SPY.Volume SPY.Adjusted duplication
+1993-01-29 29.96399 29.96399 29.81407  29.94355    1003200        29.94          NA
+1993-01-29       NA       NA       NA        NA         NA           NA   -29.96399
+1993-02-01 29.96399 30.15480 29.96399  30.15480     480500        30.15          NA
+1993-02-01       NA       NA       NA        NA         NA           NA   -29.96399
+1993-02-02 30.13436 30.24339 30.07303  30.21614     201300        30.22          NA
+1993-02-02       NA       NA       NA        NA         NA           NA   -30.13436
